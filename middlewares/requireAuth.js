@@ -7,7 +7,6 @@ function authCheck(req,res,next){
         return res.status(401).send({error:'you must be logged in'})
 
     }
-    console.log('inside the authChack')
     req.user=auth.currentUser;
     next();
 

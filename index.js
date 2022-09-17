@@ -6,15 +6,15 @@ const app = express();
 import authRoutes from './routes/auth.js'
 import getRooms from './routes/getRooms.js'
 import requireAuth  from  './middlewares/requireAuth.js'
-
+import ProfileHandler from './routes/ProfileHandler.js'
 const PORT = process.env.PORT || 5000 ; 
+
 
 dotenv.config();
 
 app.use(cors());
 
 app.use(bodyParser.json());
-
 app.use(bodyParser.urlencoded({
     extended: true
   }));
@@ -27,6 +27,8 @@ app.get('/',requireAuth,(req,res)=>{
     res.send(`your email : ${ JSON.stringify(req.user) }`)
 })
 */
+
+app.use(ProfileHandler);
 app.get('/',(req,res)=>{
 
     res.send(`your email : ${ JSON.stringify(req.user) }`)
