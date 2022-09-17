@@ -10,7 +10,6 @@ const router = express.Router();
 
 router.post('/signUp',async(req,res)=>{
     const {email,password} =req.body;
-    console.log('I got called by secret app')
 
     try{
         
@@ -19,8 +18,7 @@ router.post('/signUp',async(req,res)=>{
         .then(async (userCredential) => {
            
           const user = userCredential.user;
-          console.log('printing user id after sign up')
-          console.log(user.uid)
+          
             
             const token =  sign({userId:user.uid},'MY_SECRET_KEY');
 
@@ -45,7 +43,6 @@ router.post('/signUp',async(req,res)=>{
 
 router.post('/signIn',async(req,res)=>{
     const {email,password} =req.body;
-    console.log('signIn triggered')
     
     try{
         await signInWithEmailAndPassword(auth,email,password).then(()=>{
@@ -59,16 +56,13 @@ router.post('/signIn',async(req,res)=>{
 
 router.get('/signIn',async(req,res)=>{
     
-    console.log('signIn get triggered')
     
     try{
         if(!auth.currentUser){
-            console.log('no current user')
             res.status(422).send({message:'U need to signIn first',user:user})
         }
         else{
             const user = auth.currentUser;
-            console.log(user)
             res.status(200).send({message:'welcome back',user:user})
         }
        
@@ -79,11 +73,9 @@ router.get('/signIn',async(req,res)=>{
 
 router.get('/signOut',async(req,res)=>{
     
-    console.log('signOut get triggered')
     
  
         if(!auth.currentUser){
-            console.log('no current user')
             res.status(422).send({message:'U need to signIn first'})
         }
         else{
