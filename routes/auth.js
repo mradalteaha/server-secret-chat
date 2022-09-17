@@ -43,6 +43,7 @@ router.post('/signUp',async(req,res)=>{
 
 router.post('/signIn',async(req,res)=>{
     const {email,password} =req.body;
+    console.log('sign In')
     
     try{
         await signInWithEmailAndPassword(auth,email,password).then(()=>{
