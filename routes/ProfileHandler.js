@@ -35,7 +35,7 @@ router.post('/ProfilePhotoUpload', upload.single('file'), async (req, res) => {
     const photo = req.file; //the file is byteStream returned from multer 
     const user = auth.currentUser;
 
-
+    console.log('upload triggered on server')
     try {
         if (user && photo) {
             let fName = "profilePicture"
@@ -44,12 +44,34 @@ router.post('/ProfilePhotoUpload', upload.single('file'), async (req, res) => {
             const imageRef = ref(storage, `${path}/${fileName}.jpeg`);
             try {
 
-                const result = await uploadBytesResumable(imageRef, photo.buffer);
-                const url = await getDownloadURL(result.ref);
-                if(url){
-                    console.log('everything alright')
-                    return res.status(200).send({ message: 'uploaded successfully ', url: url })
-                }
+                const uploadTask = uploadBytesResumable(imageRef, photo.buffer);
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Upload is ' + progress + '% done');
+                        switch (snapshot.state) {
+                            case 'paused':
+                                console.log('Upload is paused');
+                                break;
+                            case 'running':
+                                console.log('Upload is running');
+                                break;
+                        }
+                    },
+                    (error) => {
+                        return res.status(400).send({ message: 'upload failed try again  ', error })
+                    },
+                    () => {
+
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                            console.log('File available at', downloadURL);
+                            return res.status(200).send({ message: 'uploaded successfully ', url: downloadURL })
+
+                        });
+                    }
+                );
 
             } catch (err) {
                 console.log('error uploading the photo')
