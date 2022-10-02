@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword ,signOut} from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword ,signOut,onAuthStateChanged} from 'firebase/auth'
 import jsonwebtoken from 'jsonwebtoken';
 const {sign} = jsonwebtoken;
 
@@ -46,8 +46,10 @@ router.post('/signIn',async(req,res)=>{
     console.log('sign In')
     
     try{
-        await signInWithEmailAndPassword(auth,email,password).then(()=>{
-             res.send({message:'sign In successfully'})
+        await signInWithEmailAndPassword(auth,email,password).then((userCredential)=>{
+
+            const user = userCredential.user;
+             res.send({message:'sign In successfully' ,currentUser:user})
         })
        
     }catch(err){
@@ -70,6 +72,22 @@ router.get('/signIn',async(req,res)=>{
     }catch(err){
         return res.status(500).send(err.message)
     }
+});
+
+
+router.get('/currentUser',async(req,res)=>{
+    
+    onAuthStateChanged(auth,user =>{
+    
+        if(user){
+            res.status(200).send({message:'welcome back',currentuser:user})
+         
+        }
+        else{
+            res.status(422).send({message:'U need to signIn first'})
+        }
+      })
+
 });
 
 router.get('/signOut',async(req,res)=>{

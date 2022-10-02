@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.js'
 import getRooms from './routes/getRooms.js'
 import requireAuth  from  './middlewares/requireAuth.js'
 import ProfileHandler from './routes/ProfileHandler.js'
+import getUsers from './routes/getUsers.js'
 const PORT = process.env.PORT || 5000 ; 
 
 
@@ -21,6 +22,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(authRoutes); // sign in / sign up routes
 app.use(getRooms); // chat rooms routes
+app.use(getUsers);
 /*
 app.get('/',requireAuth,(req,res)=>{
 
