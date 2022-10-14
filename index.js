@@ -11,7 +11,8 @@ import getUsers from './routes/getUsers.js'
 import {graphqlHTTP} from 'express-graphql'
 import schema from './schema/schema.js';
 import {ApolloServer,gql} from 'apollo-server-express'
-
+import typeDefs from './schema/types.js';
+import resolvers from './schema/resolvers.js';
 const PORT = process.env.PORT || 4000 ; 
 
 dotenv.config();
@@ -23,22 +24,15 @@ app.use(bodyParser.urlencoded({
     extended: true
   }));
 
-  const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
+
 
 // Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
 
-app.use(authRoutes); // sign in / sign up routes
-app.use(getRooms); // chat rooms routes
-app.use(getUsers);
+
+
+//app.use(authRoutes); // sign in / sign up routes
+//app.use(getRooms); // chat rooms routes
+//app.use(getUsers);
 app.get('/',requireAuth,(req,res)=>{
 
     res.send(`your email : ${ JSON.stringify(req.user) }`)
@@ -49,12 +43,12 @@ app.get('/',(req,res)=>{
     res.send(`your email : ${ JSON.stringify(req.user) }`)
 })
 
-
+/*
 app.use('/graphql',graphqlHTTP({
     graphiql:true,
     schema,
     
-}));
+}));*/
 
 const server = new ApolloServer({ typeDefs, resolvers });
 await server.start();
