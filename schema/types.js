@@ -2,9 +2,17 @@
 import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
+type User{
+  displayName: String ,
+        email:String , 
+        photoURL:String , 
+        uid:String ,        
+}
 type Query {
   hello: String
 }
+
+
 `;
 
 export default typeDefs;
