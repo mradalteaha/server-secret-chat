@@ -30,9 +30,9 @@ app.use(bodyParser.urlencoded({
 
 
 
-//app.use(authRoutes); // sign in / sign up routes
-//app.use(getRooms); // chat rooms routes
-//app.use(getUsers);
+app.use(authRoutes); // sign in / sign up routes
+app.use(getRooms); // chat rooms routes
+app.use(getUsers);
 app.get('/',requireAuth,(req,res)=>{
 
     res.send(`your email : ${ JSON.stringify(req.user) }`)

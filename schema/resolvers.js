@@ -10,7 +10,7 @@ const User={
 
 const resolvers = {
     Query: {
-      hello: () => 'Hello world!',
+    
       user:(uid)=>User,
     },
   };
