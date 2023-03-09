@@ -13,7 +13,11 @@ import schema from './schema/schema.js';
 import {ApolloServer,gql} from 'apollo-server-express'
 import typeDefs from './schema/types.js';
 import resolvers from './schema/resolvers.js';
+import {generateKeyPairSync} from 'crypto'
 const PORT = process.env.PORT || 4000 ; 
+
+
+
 
 dotenv.config();
 
@@ -30,18 +34,46 @@ app.use(bodyParser.urlencoded({
 
 
 
-app.use(authRoutes); // sign in / sign up routes
+/* app.use(authRoutes); // sign in / sign up routes
 app.use(getRooms); // chat rooms routes
 app.use(getUsers);
-app.get('/',requireAuth,(req,res)=>{
 
-    res.send(`your email : ${ JSON.stringify(req.user) }`)
-})
-app.use(ProfileHandler);
+ */
 app.get('/',(req,res)=>{
 
-    res.send(`your email : ${ JSON.stringify(req.user) }`)
+    res.send(`hello`)
 })
+
+
+app.get('/GenerateKeys',(req,res)=>{
+
+try{
+
+const { publicKey, privateKey } = generateKeyPairSync("rsa", {
+	modulusLength: 2048,
+	publicKeyEncoding: {
+	  type: "pkcs1",
+	  format: "pem",
+	},
+	privateKeyEncoding: {
+	  type: "pkcs1",
+	  format: "pem",
+	},
+  });
+
+  res.send(`your keys are public key : ${publicKey} \n private key : ${privateKey} `)
+
+}catch(err){
+
+}
+
+})
+
+
+
+
+
+//app.use(ProfileHandler);
 
 /*
 app.use('/graphql',graphqlHTTP({
@@ -50,12 +82,12 @@ app.use('/graphql',graphqlHTTP({
     
 }));*/
 
-const server = new ApolloServer({ typeDefs, resolvers });
+/* const server = new ApolloServer({ typeDefs, resolvers });
 await server.start();
 server.applyMiddleware({ app });
-
+ */
 app.listen(PORT, () =>
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+  console.log(`🚀 Server ready at http://localhost:4000`)
 );
 ﻿
 
